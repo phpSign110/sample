@@ -1,9 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable; //消息通知相关功能
+use Illuminate\Foundation\Auth\User as Authenticatable;//授权相关功能的引用
 
 class User extends Authenticatable
 {
@@ -26,4 +26,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $table='users';
+
 }
