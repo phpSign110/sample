@@ -5,12 +5,13 @@
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-@include('layouts._header')
+@include('layouts._header'){{--引入顶部视图--}}
 
 <div class="container">
     <div class="col-md-offset-1 col-md-10">
+        @include('shared._messages') {{--闪存提示信息 --}}
         @yield('content')
-        @include('layouts._footer')
+        @include('layouts._footer'){{--引入底部视图--}}
     </div>
 </div>
 
