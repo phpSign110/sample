@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -27,6 +28,7 @@ class UsersController extends Controller
 
     }
 
+    //用户注册操作
     public function store(Request $request)
     {
 
@@ -44,6 +46,9 @@ class UsersController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+
+        //注册完成 自动登录
+        Auth::login($user);
 
         //3.页面提示用户
         session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
