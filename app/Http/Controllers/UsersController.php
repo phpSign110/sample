@@ -6,8 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+
 class UsersController extends Controller
+
 {
+    public function __construct()
+    {
+        $this->middleware('auth', [
+            'except' => ['show', 'create', 'store','index']
+        ]);
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
     //用户注册
     public function create()
     {
@@ -25,7 +37,10 @@ class UsersController extends Controller
     //显示所有用户列表的页面
     public function index()
     {
+       // $users = User::all();
+        $users = User::paginate(5);
 
+        return view('users.index', compact('users'));
     }
 
     //用户注册操作
@@ -58,4 +73,49 @@ class UsersController extends Controller
 
     }
 
+    //用户编辑页面
+    public function edit(User $user)
+    {
+        //判断授权
+        $this->authorize('update', $user);
+
+        return view('users.edit', compact('user'));
+    }
+
+    //用户更新信息
+    public function update(User $user,Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'password' => 'nullable|confirmed|min:6'
+        ]);
+
+        //判断授权
+        $this->authorize('update', $user);
+
+
+        $data = [];
+        $data['name'] = $request->name;
+        if ($request->password) {
+            $data['password'] = bcrypt($request->password);
+        }
+        
+        $user->update($data);
+
+        session()->flash('success', '个人资料更新成功！');
+
+        return redirect()->route('users.show', $user->id);
+    }
+
+    //删除资源
+    public function destroy(User $user)
+    {
+        //判断授权
+        $this->authorize('destroy', $user);
+
+        $user->delete();
+        
+        session()->flash('success', '成功删除用户！');
+        return back();
+    }
 }
