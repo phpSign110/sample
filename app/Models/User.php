@@ -53,9 +53,23 @@ class User extends Authenticatable
 
     }
 
+    //重置密码发送邮件消息
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));
+    }
+
+    //指明一个用户可以有多个微博
+    public function statuses()
+    {
+        return $this->hasMany(Status::class);
+    }
+
+    //获取个人微博信息
+    public function feed()
+    {
+        return $this->statuses()
+            ->orderBy('created_at', 'desc');
     }
 
 

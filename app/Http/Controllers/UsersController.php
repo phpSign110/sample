@@ -29,9 +29,11 @@ class UsersController extends Controller
     //显示用户个人信息的页面
     public function show(User $user)
     {
+        $statuses = $user->statuses()
+            ->orderBy('created_at', 'desc')
+            ->paginate(30);
 
-        //var_dump($user->attributesToArray());exit;
-        return view('users.show', compact('user'));
+        return view('users.show', compact('user','statuses'));
     }
 
     //显示所有用户列表的页面
@@ -164,6 +166,7 @@ class UsersController extends Controller
        // dd(Mail::failures());exit;
        // var_dump($data);exit;
     }
+
 
 
 }
